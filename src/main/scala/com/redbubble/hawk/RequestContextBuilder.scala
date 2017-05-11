@@ -2,16 +2,16 @@ package com.redbubble.hawk
 
 import java.net.URI
 
-import com.github.benhutchison.mouse.all._
 import com.redbubble.hawk.HawkAuthenticate.parseRawRequestAuthHeader
 import com.redbubble.hawk.params._
 import com.redbubble.hawk.validate.RequestAuthorisationHeader
 import com.twitter.finagle.http.Request
 import com.twitter.io.Buf
 import com.twitter.util.Try
+import mouse.all._
 
 object RequestContextBuilder {
-  def buildContext(request: Request): Option[RequestContext] =
+  def buildContext(request: Request): Option[ValidatableRequestContext] =
     for {
       header <- parseAuthHeader(request)
       method <- HttpMethod.httpMethod(request.method.toString())
@@ -21,7 +21,7 @@ object RequestContextBuilder {
       val port = Port(requestUri.getPort)
       val path = UriPath(requestUri.getRawPath)
       val pc = methodDependantPayloadContext(method, request.contentType, request.content)
-      RequestContext(method, host, port, path, header, pc)
+      ValidatableRequestContext(RequestContext(method, host, port, path, pc), header)
     }
 
   private def parseAuthHeader(request: Request): Option[RequestAuthorisationHeader] =
@@ -32,10 +32,10 @@ object RequestContextBuilder {
 
   private def payloadContext(contentType: Option[String], content: Buf): PayloadContext = {
     val ct = contentType.map(ContentType(_)).getOrElse(ContentType.UnknownContentType)
-    PayloadContext(ct, bufToStream(content))
+    PayloadContext(ct, bufToBytes(content))
   }
 
-  private def bufToStream(b: Buf): Array[Byte] = {
+  private def bufToBytes(b: Buf): Array[Byte] = {
     val output = new Array[Byte](b.length)
     b.write(output, 0)
     output

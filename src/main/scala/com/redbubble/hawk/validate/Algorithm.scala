@@ -11,7 +11,11 @@ object Algorithm {
 sealed trait Algorithm {
   def name: String
 
-  // From: http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator
+  /**
+    * A `KeyGenerator` algorithm.
+    *
+    * See: http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator
+    */
   def keyGeneratorAlgorithm: String
 }
 

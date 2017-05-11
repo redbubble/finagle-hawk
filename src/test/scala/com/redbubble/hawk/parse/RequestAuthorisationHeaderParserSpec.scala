@@ -1,14 +1,17 @@
 package com.redbubble.hawk.parse
 
 import com.redbubble.hawk._
+import com.redbubble.hawk.params.{Nonce, PayloadHash}
+import com.redbubble.hawk.spec.Generators
+import com.redbubble.hawk.util.Time
 import com.redbubble.hawk.validate.{MAC, RequestAuthorisationHeader}
 import com.redbubble.util.spec.SpecHelper
-import com.redbubble.util.time.Time
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Gen, Properties}
 import org.specs2.mutable.Specification
 
-final class RequestAuthorisationHeaderParserSpec extends Specification with SpecHelper {
+//noinspection ScalaStyle
+final class RequestAuthorisationHeaderParserSpec extends Specification with SpecHelper with Generators {
   val noHawkId = List(
     """Hawke id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
     """Hawkid="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
@@ -44,7 +47,7 @@ final class RequestAuthorisationHeaderParserSpec extends Specification with Spec
 
   s2"Parsing invalid/unsupported authentication headers$invalidHeadersProp"
 
-  import Arbitraries._
+  import HawkArbitraries._
 
   val knownGoodHeaders = List(
     """Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
@@ -63,19 +66,12 @@ final class RequestAuthorisationHeaderParserSpec extends Specification with Spec
     property("generated headers") = forAll {
       (keyId: KeyId, timestamp: Time, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: Option[ExtendedData], mac: MAC) => {
         val lossyTime = Time.time(timestamp.asSeconds)
-        val parsed = RequestAuthorisationHeaderParser.parseAuthHeader(header(keyId, lossyTime, nonce, payloadHash, extendedData, mac))
-        parsed must beSome(new RequestAuthorisationHeader(keyId, lossyTime, nonce, payloadHash, extendedData, mac))
+        val expected = RequestAuthorisationHeader(keyId, lossyTime, nonce, payloadHash, extendedData, mac)
+        val parsed = RequestAuthorisationHeaderParser.parseAuthHeader(expected.httpHeaderForm)
+        parsed must beSome(expected)
       }
     }
   }
 
   s2"Parsing authentication header$parseProp"
-
-  private def header(keyId: KeyId, timestamp: Time, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: Option[ExtendedData], mac: MAC): RawAuthenticationHeader = {
-    // Note. We re-parse the time here so that we loose millisecond precision, i.e. what we would get passed from a client call.
-    val kvs = Map("id" -> s"$keyId", "ts" -> s"${timestamp.asSeconds}", "nonce" -> s"$nonce", "mac" -> s"${mac.encoded}") ++
-        payloadHash.map(hash => Map("hash" -> s"$hash")).getOrElse(Map()) ++
-        extendedData.map(ext => Map("ext" -> s"$ext")).getOrElse(Map())
-    RawAuthenticationHeader(s"""Hawk ${kvs.map(kv => s"""${kv._1}="${kv._2}"""").mkString(", ")}""")
-  }
 }

@@ -1,21 +1,19 @@
 package com.redbubble.hawk.validate
 
-import cats.data.Xor
-import com.github.benhutchison.mouse.all._
-import com.redbubble.hawk._
-import com.redbubble.hawk.params.RequestContext
-import com.redbubble.util.time.Time
-import Time.nowUtc
-import com.redbubble.hawk.{HawkError, ValidationMethod}
+import com.redbubble.hawk.params.ValidatableRequestContext
+import com.redbubble.hawk.util.Time.nowUtc
+import com.redbubble.hawk.{HawkError, ValidationMethod, _}
+import mouse.all._
 import org.joda.time.Duration
 
 trait TimeValid
 
 object TimeValidation extends Validator[TimeValid] {
-  final val acceptableTimeDelta = Duration.standardMinutes(2)
+  final val acceptableTimeDelta: Duration = Duration.standardMinutes(2)
 
-  override def validate(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[HawkError, TimeValid] = {
+  override def validate(credentials: Credentials,
+      context: ValidatableRequestContext, method: ValidationMethod): Either[HawkError, TimeValid] = {
     val delta = nowUtc.minus(context.clientAuthHeader.timestamp).getStandardSeconds
-    (delta <= acceptableTimeDelta.getStandardSeconds).xor(error("Timestamp invalid"), new TimeValid {})
+    (delta <= acceptableTimeDelta.getStandardSeconds).either(error("Timestamp invalid"), new TimeValid {})
   }
 }

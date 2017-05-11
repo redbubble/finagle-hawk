@@ -1,8 +1,8 @@
-package com.redbubble.util.time
+package com.redbubble.hawk.util
 
-import com.github.benhutchison.mouse.all._
-import com.redbubble.util.time.Time.iso8601Formatter
+import com.redbubble.hawk.util.Time.iso8601Formatter
 import com.twitter.util.Try
+import mouse.all._
 import org.joda.time.DateTimeZone._
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{DateTime, DateTimeConstants, Duration}
@@ -40,4 +40,3 @@ final case class Time(millis: Millis) {
 
   def toIso8601: String = iso8601Formatter.print(millis)
 }
-

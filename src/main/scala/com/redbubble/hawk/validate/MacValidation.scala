@@ -1,20 +1,19 @@
 package com.redbubble.hawk.validate
 
-import cats.data.Xor
-import com.github.benhutchison.mouse.all._
-import com.redbubble.hawk.{HawkError, ValidationMethod}
-import com.redbubble.hawk._
-import com.redbubble.hawk.params.RequestContext
-import com.redbubble.hawk.validate.Maccer.requestMac
+import com.redbubble.hawk.params.ValidatableRequestContext
+import com.redbubble.hawk.validate.Maccer.validateRequestMac
+import com.redbubble.hawk.{HawkError, ValidationMethod, _}
+import mouse.all._
 
 trait MacValid
 
 object MacValidation extends Validator[MacValid] {
-  override def validate(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[HawkError, MacValid] =
-    requestMac(credentials, context, method).map {
+  override def validate(credentials: Credentials,
+      context: ValidatableRequestContext, method: ValidationMethod): Either[HawkError, MacValid] =
+    validateRequestMac(credentials, context, method).map {
       computedMac => validateMac(computedMac, context.clientAuthHeader.mac)
-    }.getOrElse(errorXor("Request MAC does not match computed MAC"))
+    }.getOrElse(errorE("Request MAC does not match computed MAC"))
 
-  private def validateMac(computedMac: MAC, providedMac: MAC): Xor[HawkError, MacValid] =
-    (computedMac == providedMac).xor(error("Request MAC does not match computed MAC"), new MacValid {})
+  private def validateMac(computedMac: MAC, providedMac: MAC): Either[HawkError, MacValid] =
+    (computedMac == providedMac).either(error("Request MAC does not match computed MAC"), new MacValid {})
 }
