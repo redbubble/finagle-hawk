@@ -19,11 +19,12 @@ You will need to add something like the following to your `build.sbt`:
 
 ```
 libraryDependencies ++= Seq(
-  "com.twitter" %% "finagle-http" % "6.35.0"
-  "org.typelevel" %% "cats-core" % "0.6.0",
-  "joda-time" % "joda-time" % "2.9.3",
-  "org.joda" % "joda-convert" % "1.8",
-  "com.github.benhutchison" %% "mouse" % "0.2"
+  "com.twitter" %% "finagle-http" % "6.44.0"
+  "com.twitter" %% "finagle-stats" % "6.44.0"
+  "org.typelevel" %% "cats-core" % "0.9.0",
+  "joda-time" % "joda-time" % "2.9.9",
+  "org.joda" % "joda-convert" % "1.8.1",
+  "com.github.benhutchison" %% "mouse" % "0.7"
 )
 ```
 
