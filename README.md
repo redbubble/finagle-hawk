@@ -9,7 +9,6 @@ Almost all of this library is Finagle agnostic, only `HawkAuthenticateRequestFil
 The code is almost directly pulled from a production codebase, no effort was made to make it resusable, sorry. It might not compile without some changes. In particular, you'll need to include:
 
 * An implementation of `AuthenticationFailedError`.
-* A sample `Time` implementation has been provided.
 
 See [Misc](#misc) for an example implementation of these classes.
 
