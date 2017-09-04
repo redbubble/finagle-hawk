@@ -4,11 +4,10 @@ import java.nio.charset.StandardCharsets._
 
 import com.redbubble.hawk._
 import com.redbubble.hawk.params._
-import com.redbubble.hawk.spec.Generators
+import com.redbubble.hawk.spec.{Generators, SpecHelper}
 import com.redbubble.hawk.util.Seconds
 import com.redbubble.hawk.util.Time.time
 import com.redbubble.hawk.validate.NormalisedRequest.{normalisedHeaderMac, normalisedPayloadMac}
-import com.redbubble.util.spec.SpecHelper
 import org.specs2.mutable.Specification
 
 final class MaccerSpec extends Specification with SpecHelper with Generators {

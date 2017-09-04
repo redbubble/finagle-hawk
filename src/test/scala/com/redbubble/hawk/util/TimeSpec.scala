@@ -1,8 +1,7 @@
 package com.redbubble.hawk.util
 
-import com.redbubble.hawk.spec.Generators
+import com.redbubble.hawk.spec.{Generators, SpecHelper}
 import com.redbubble.hawk.util.Time._
-import com.redbubble.util.spec.SpecHelper
 import org.joda.time.DateTime
 import org.scalacheck.Prop._
 import org.scalacheck.Properties

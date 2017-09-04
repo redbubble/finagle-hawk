@@ -1,7 +1,7 @@
 package com.redbubble.hawk.parse
 
 import com.redbubble.hawk._
-import com.redbubble.util.spec.SpecHelper
+import com.redbubble.hawk.spec.SpecHelper
 import org.scalacheck.Prop.forAll
 import org.scalacheck.{Arbitrary, Gen, Properties}
 import org.specs2.mutable.Specification

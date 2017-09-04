@@ -3,8 +3,8 @@ package com.redbubble.hawk.parse
 import com.redbubble._
 import com.redbubble.hawk._
 import com.redbubble.hawk.params.{Nonce, PayloadHash}
+import com.redbubble.hawk.spec.Generators
 import com.redbubble.hawk.validate.MAC
-import com.redbubble.util.spec.gen.Generators
 import org.scalacheck.{Arbitrary, Gen}
 import shapeless.tag.@@
 

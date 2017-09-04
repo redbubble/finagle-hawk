@@ -1,12 +1,11 @@
 package com.redbubble.hawk.validate
 
 import com.redbubble.hawk.params._
-import com.redbubble.hawk.spec.Generators
+import com.redbubble.hawk.spec.{Generators, SpecHelper}
 import com.redbubble.hawk.util.Time
 import com.redbubble.hawk.util.Time._
 import com.redbubble.hawk.validate.TimeValidation.{acceptableTimeDelta, validate}
 import com.redbubble.hawk.{HeaderValidationMethod, _}
-import com.redbubble.util.spec.SpecHelper
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Properties
 import org.specs2.mutable.Specification

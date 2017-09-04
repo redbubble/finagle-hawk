@@ -6,6 +6,14 @@ Note that it currently doesn't support [Response Payload Validation](https://git
 
 Almost all of this library is Finagle agnostic, only `HawkAuthenticateRequestFilter` is tied to Finagle.
 
+If you like this, you might like other open source code from Redbubble:
+
+* [rb-scala-utils](https://github.com/redbubble/rb-scala-utils) - Miscellaneous utilities (common code) for building
+  Scala-based services, using Finch (on which this project depends).
+* [finch-template](https://github.com/redbubble/finch-template) - A template project for Finch-based services.
+* [rb-graphql-template](https://github.com/redbubble/rb-graphql-template) - A template for Scala HTTP GraphQL services.
+* [finch-sangria](https://github.com/redbubble/finch-sangria) - A simple wrapper for using Sangria from within Finch;
+
 # Setup
 
 You will need to add something like the following to your `build.sbt`:

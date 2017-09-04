@@ -4,10 +4,10 @@ import java.nio.charset.StandardCharsets._
 
 import com.redbubble.hawk._
 import com.redbubble.hawk.params._
-import com.redbubble.hawk.validate.NormalisedRequest._
-import com.redbubble.util.spec.SpecHelper
+import com.redbubble.hawk.spec.SpecHelper
 import com.redbubble.hawk.util.Seconds
 import com.redbubble.hawk.util.Time.time
+import com.redbubble.hawk.validate.NormalisedRequest._
 import org.specs2.mutable.Specification
 
 final class NormalisedRequestSpec extends Specification with SpecHelper {

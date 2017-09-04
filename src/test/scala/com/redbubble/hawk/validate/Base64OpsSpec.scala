@@ -2,7 +2,7 @@ package com.redbubble.hawk.validate
 
 import java.nio.charset.StandardCharsets._
 
-import com.redbubble.util.spec.SpecHelper
+import com.redbubble.hawk.spec.SpecHelper
 import org.specs2.mutable.Specification
 
 final class Base64OpsSpec extends Specification with SpecHelper {

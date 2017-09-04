@@ -4,9 +4,8 @@ import com.redbubble.hawk._
 import com.redbubble.hawk.params.{Nonce, PayloadHash}
 import com.redbubble.hawk.parse.HawkArbitraries._
 import com.redbubble.hawk.parse.RequestAuthorisationHeaderParser
-import com.redbubble.hawk.spec.Generators
+import com.redbubble.hawk.spec.{Generators, SpecHelper}
 import com.redbubble.hawk.util.Time
-import com.redbubble.util.spec.SpecHelper
 import org.scalacheck.Prop._
 import org.scalacheck.Properties
 import org.specs2.mutable.Specification

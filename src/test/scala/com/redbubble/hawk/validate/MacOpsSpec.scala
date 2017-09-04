@@ -3,7 +3,7 @@ package com.redbubble.hawk.validate
 import java.nio.charset.StandardCharsets._
 
 import com.redbubble.hawk._
-import com.redbubble.util.spec.SpecHelper
+import com.redbubble.hawk.spec.SpecHelper
 import org.specs2.mutable.Specification
 
 // Note. Test data generated with http://hash.online-convert.com/sha256-generator

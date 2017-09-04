@@ -51,5 +51,5 @@ package object hawk {
 
   def errorE[T](message: String): Either[HawkError, T] = Left(error(message))
 
-  def error(message: String): HawkError = new HawkError(message)
+  def error(message: String): HawkError = HawkAuthenticationFailedError(message)
 }

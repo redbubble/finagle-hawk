@@ -4,10 +4,9 @@ import cats.syntax.either._
 import com.redbubble.hawk.HawkAuthenticate.authenticateRequest
 import com.redbubble.hawk.RequestContextBuilder.buildContext
 import com.redbubble.hawk.validate.Credentials
-import com.redbubble.util.http.ResponseOps._
-import com.redbubble.util.http.{ApiError, AuthenticationFailedError}
-import com.redbubble.util.metrics.StatsReceiver
+import com.redbubble.util.http.ResponseOps.unauthorised
 import com.twitter.finagle.http.{Request, Response}
+import com.twitter.finagle.stats.StatsReceiver
 import com.twitter.finagle.{Service, SimpleFilter}
 import com.twitter.util.Future
 
@@ -37,10 +36,10 @@ abstract class HawkAuthenticateRequestFilter(
       )
     }
 
-  private def authenticate(request: Request): Either[ApiError, RequestValid] = {
+  private def authenticate(request: Request): Either[HawkError, RequestValid] = {
     val valid = buildContext(request).map { context =>
       authenticateRequest(credentials, context)
     }.getOrElse(errorE(s"Missing authentication header '$AuthorisationHttpHeader'"))
-    valid.leftMap(e => AuthenticationFailedError("Request is not authorised", Some(e)))
+    valid.leftMap(e => HawkAuthenticationFailedError("Request is not authorised", Some(e)))
   }
 }

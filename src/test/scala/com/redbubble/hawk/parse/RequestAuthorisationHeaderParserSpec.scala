@@ -2,10 +2,9 @@ package com.redbubble.hawk.parse
 
 import com.redbubble.hawk._
 import com.redbubble.hawk.params.{Nonce, PayloadHash}
-import com.redbubble.hawk.spec.Generators
+import com.redbubble.hawk.spec.{Generators, SpecHelper}
 import com.redbubble.hawk.util.Time
 import com.redbubble.hawk.validate.{MAC, RequestAuthorisationHeader}
-import com.redbubble.util.spec.SpecHelper
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Gen, Properties}
 import org.specs2.mutable.Specification

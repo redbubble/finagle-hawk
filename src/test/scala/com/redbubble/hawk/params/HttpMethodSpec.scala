@@ -1,6 +1,6 @@
 package com.redbubble.hawk.params
 
-import com.redbubble.util.spec.SpecHelper
+import com.redbubble.hawk.spec.SpecHelper
 import org.scalacheck.Prop._
 import org.scalacheck.Properties
 import org.specs2.mutable.Specification
