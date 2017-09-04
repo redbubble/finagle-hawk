@@ -5,8 +5,8 @@ import com.redbubble.hawk.HawkAuthenticate.authenticateRequest
 import com.redbubble.hawk.RequestContextBuilder.buildContext
 import com.redbubble.hawk.validate.Credentials
 import com.redbubble.util.http.ResponseOps.unauthorised
+import com.redbubble.util.metrics.StatsReceiver
 import com.twitter.finagle.http.{Request, Response}
-import com.twitter.finagle.stats.StatsReceiver
 import com.twitter.finagle.{Service, SimpleFilter}
 import com.twitter.util.Future
 
