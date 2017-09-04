@@ -6,25 +6,14 @@ Note that it currently doesn't support [Response Payload Validation](https://git
 
 Almost all of this library is Finagle agnostic, only `HawkAuthenticateRequestFilter` is tied to Finagle.
 
-The code is almost directly pulled from a production codebase, no effort was made to make it resusable, sorry. It might not compile without some changes. In particular, you'll need to include:
-
-* An implementation of `AuthenticationFailedError`.
-
-See [Misc](#misc) for an example implementation of these classes.
-
 # Setup
 
 You will need to add something like the following to your `build.sbt`:
 
-```
-libraryDependencies ++= Seq(
-  "com.twitter" %% "finagle-http" % "6.44.0"
-  "com.twitter" %% "finagle-stats" % "6.44.0"
-  "org.typelevel" %% "cats-core" % "0.9.0",
-  "joda-time" % "joda-time" % "2.9.9",
-  "org.joda" % "joda-convert" % "1.8.1",
-  "com.github.benhutchison" %% "mouse" % "0.7"
-)
+```scala
+resolvers += Resolver.jcenterRepo
+
+libraryDependencies += "com.redbubble" %% "finagle-hawk" % "0.1.0"
 ```
 
 # Usage
@@ -37,19 +26,18 @@ object AuthenticationFilter extends HawkAuthenticateRequestFilter(creds)
 val authenticatedService = AuthenticationFilter andThen service
 ```
 
-# Misc
+# Release
 
-We make use of a `AuthenticationFailedError` error, which is hooked up to a top-level exception handling filter in Finagle. It looks something like this:
+For contributors, a cheat sheet to making a new release:
 
-```scala
-abstract class ApiError extends Exception
-
-abstract class ApiError_(message: String, cause: Option[Throwable]) extends ApiError {
-  override def getMessage: String = message
-
-  override def getCause: Throwable = cause.orNull
-}
-
-final case class AuthenticationFailedError(message: String, cause: Option[Throwable] = None) extends ApiError_(message, cause)
+```shell
+$ git commit -m "New things" && git push
+$ git tag -a v0.0.3 -m "v0.0.3"
+$ git push --tags
+$ ./sbt publish
 ```
+
+# Contributing
+
+Issues and pull requests are welcome. Code contributions should be aligned with the above scope to be included, and include unit tests.
 
