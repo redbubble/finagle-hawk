@@ -38,14 +38,14 @@ scalacOptions ++= Seq(
 
 )
 
+scalacOptions in Test ++= Seq("-Yrangepos")
+
 resolvers ++= Seq(
   Resolver.jcenterRepo,
   Resolver.sonatypeRepo("releases"),
   Resolver.sonatypeRepo("snapshots"),
   "Twitter" at "http://maven.twttr.com"
 )
-
-scalacOptions in Test ++= Seq("-Yrangepos")
 
 lazy val rbUtilsVersion = "0.1.1"
 lazy val catsVersion = "0.9.0"
