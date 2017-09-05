@@ -1,5 +1,7 @@
 # HAWK Support for Finagle/Finch
 
+[![Build status](https://img.shields.io/travis/redbubble/finagle-hawk/master.svg)](https://travis-ci.org/redbubble/finagle-hawk)
+
 [HTTP Holder-Of-Key Authentication Scheme](https://github.com/hueniverse/hawk) (Hawk) support for [Finagle](https://github.com/finagle/finagle).
 
 Note that it currently doesn't support [Response Payload Validation](https://github.com/hueniverse/hawk#response-payload-validation).
