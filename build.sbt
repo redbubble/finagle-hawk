@@ -47,7 +47,7 @@ resolvers ++= Seq(
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 
-lazy val rbUtilsVersion = "0.1.0"
+lazy val rbUtilsVersion = "0.1.1"
 lazy val catsVersion = "0.9.0"
 lazy val mouseVersion = "0.9"
 lazy val shapelessVersion = "2.3.2"
