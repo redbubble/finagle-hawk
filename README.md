@@ -1,6 +1,6 @@
-# HAWK Support for Finagle/Finch
-
 [![Build status](https://img.shields.io/travis/redbubble/finagle-hawk/master.svg)](https://travis-ci.org/redbubble/finagle-hawk)
+
+# HAWK Support for Finagle/Finch
 
 [HTTP Holder-Of-Key Authentication Scheme](https://github.com/hueniverse/hawk) (Hawk) support for [Finagle](https://github.com/finagle/finagle).
 
