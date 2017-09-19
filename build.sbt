@@ -35,7 +35,6 @@ scalacOptions ++= Seq(
   "-Xfatal-warnings",
   "-Ywarn-value-discard",
   "-Ypartial-unification"
-
 )
 
 scalacOptions in Test ++= Seq("-Yrangepos")
@@ -47,14 +46,14 @@ resolvers ++= Seq(
   "Twitter" at "http://maven.twttr.com"
 )
 
-lazy val rbUtilsVersion = "0.1.1"
+lazy val rbUtilsVersion = "0.2.4"
 lazy val catsVersion = "0.9.0"
 lazy val mouseVersion = "0.9"
 lazy val shapelessVersion = "2.3.2"
 lazy val circeVersion = "0.8.0"
 lazy val finagleVersion = "6.45.0"
 lazy val jodaTimeVersion = "2.9.9"
-lazy val jodaConvertVersion = "1.8.2"
+lazy val jodaConvertVersion = "1.9"
 lazy val specsVersion = "3.9.5"
 
 libraryDependencies ++= Seq(

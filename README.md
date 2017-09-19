@@ -23,7 +23,7 @@ You will need to add something like the following to your `build.sbt`:
 ```scala
 resolvers += Resolver.jcenterRepo
 
-libraryDependencies += "com.redbubble" %% "finagle-hawk" % "0.2.1"
+libraryDependencies += "com.redbubble" %% "finagle-hawk" % "0.2.2"
 ```
 
 # Usage
