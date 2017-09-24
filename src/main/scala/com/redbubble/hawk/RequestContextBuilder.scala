@@ -19,8 +19,8 @@ object RequestContextBuilder {
       method <- HttpMethod.httpMethod(request.method.toString())
       requestUri <- Try(new URI(request.uri)).toOption
     } yield {
-      val host = request.host.map(Host(_)).getOrElse(Host.UnknownHost)
-      val port = Port(requestUri.getPort)
+      val host = guessRequestHost(request.host, requestUri)
+      val port = guessRequestPort(requestUri)
       val path = UriPath(requestUri.getRawPath)
       val pc = methodDependantPayloadContext(method, request.contentType, request.content)
       ValidatableRequestContext(RequestContext(method, host, port, path, pc), header)
@@ -35,5 +35,23 @@ object RequestContextBuilder {
   private def payloadContext(contentType: Option[String], content: Buf): PayloadContext = {
     val ct = contentType.map(ContentType(_)).getOrElse(ContentType.UnknownContentType)
     PayloadContext(ct, BufOps.bufToByteArray(content))
+  }
+
+  // Use the Host header if present, or default to the request URI.
+  private def guessRequestHost(hostHeader: Option[String], requestUri: URI) =
+    hostHeader.orElse(Option(requestUri.getHost)).map(Host(_)).getOrElse(Host.UnknownHost)
+
+  // Do our best to figure out the port.
+  private def guessRequestPort(requestUri: URI) = {
+    val port =
+      requestUri.getPort match {
+        case -1 =>
+          requestUri.getScheme match {
+            case "https" => 443
+            case _ => 80
+          }
+        case p => p
+      }
+    Port(port)
   }
 }

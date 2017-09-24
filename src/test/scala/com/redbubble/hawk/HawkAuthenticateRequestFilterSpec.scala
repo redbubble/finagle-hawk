@@ -1,13 +1,16 @@
 package com.redbubble.hawk
 
+import java.net.URI
+
 import com.redbubble.hawk.HawkAuthenticate.hawkHeader
 import com.redbubble.hawk.params._
 import com.redbubble.hawk.spec.SpecHelper
+import com.redbubble.hawk.util.Time
 import com.redbubble.hawk.validate.{Credentials, Sha256}
 import com.redbubble.util.http.ResponseOps.textResponse
 import com.redbubble.util.metrics.StatsReceiver
 import com.twitter.finagle.Service
-import com.twitter.finagle.http.Status.Ok
+import com.twitter.finagle.http.Status.{Ok, Unauthorized}
 import com.twitter.finagle.http.{Method, Request, Response}
 import com.twitter.io.Buf
 import com.twitter.util.{Await, Future}
@@ -25,23 +28,23 @@ final class HawkAuthenticateRequestFilterSpec extends Specification with SpecHel
   "HawkAuthenticateRequestFilter" >> {
     val hawkAuthenticatedService = HawkAuthFilter andThen TestService
 
-//    "with an invalid Hawk authorisation header" >> {
-//      val timeStamp = Time.nowUtc.millis
-//      val nonce = Nonce.generateNonce
-//      val invalidHawkHeader = s"""Hawk id="dh37fgj492je", ts="$timeStamp", nonce="$nonce", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw=""""
-//      val req = requestWithAuthHeader(invalidHawkHeader)
-//
-//      "does not execute the service" >> {
-//        val result = Await.result(hawkAuthenticatedService(req))
-//        result.status should be(Unauthorized)
-//      }
-//    }
+        "with an invalid Hawk authorisation header" >> {
+          val timeStamp = Time.nowUtc.millis
+          val nonce = Nonce.generateNonce
+          val invalidHawkHeader = s"""Hawk id="dh37fgj492je", ts="$timeStamp", nonce="$nonce", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw=""""
+          val req = requestWithAuthHeader(URI.create("/uri/does/not/matter"), invalidHawkHeader)
+
+          "does not execute the service" >> {
+            val result = Await.result(hawkAuthenticatedService(req))
+            result.status should be(Unauthorized)
+          }
+        }
 
     "with a valid Hawk authorisation header" >> {
-      val context = RequestContext(Get, Host("example.com"), Port(80), UriPath(baseRequest.path), None)
+      val uri = URI.create("https://example.com/foo/bar")
+      val context = RequestContext(Get, Host("example.com"), Port(443), UriPath(uri.getPath), None)
       val validHawkHeader = hawkHeader(credentials, context).httpHeaderForm
-      println(s"validHawkHeader ${validHawkHeader}")
-      val req = requestWithAuthHeader(validHawkHeader)
+      val req = requestWithAuthHeader(uri, validHawkHeader)
 
       "executes the service" >> {
         val result = Await.result(hawkAuthenticatedService(req))
@@ -50,10 +53,10 @@ final class HawkAuthenticateRequestFilterSpec extends Specification with SpecHel
     }
   }
 
-  private def baseRequest: Request = Request(Method.Get, "/does/not/matter")
+  private def baseRequest(uri: URI): Request = Request(Method.Get, uri.toString)
 
-  private def requestWithAuthHeader(hawkHeader: String) = {
-    val request = baseRequest
+  private def requestWithAuthHeader(uri: URI, hawkHeader: String) = {
+    val request = baseRequest(uri)
     request.headerMap.add(AuthorisationHttpHeader, hawkHeader)
     request
   }

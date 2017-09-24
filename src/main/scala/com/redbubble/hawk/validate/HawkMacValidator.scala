@@ -15,8 +15,6 @@ object MacValid {
 object HawkMacValidator {
   def validate(credentials: Credentials, context: ValidatableRequestContext): Either[HawkError, MacValid] = {
     validateAndComputeRequestMac(credentials, context).flatMap { computedMac =>
-      println(s"Computed MAC value: $computedMac")
-      println(s"Provided header MAC value: ${context.clientAuthHeader.mac}")
       validateMac(computedMac, context.clientAuthHeader.mac)
     }.leftMap(e => error(s"Request MAC does not match computed MAC: ${e.getMessage}"))
   }
