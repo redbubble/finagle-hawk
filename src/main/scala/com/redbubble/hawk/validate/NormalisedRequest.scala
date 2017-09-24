@@ -9,18 +9,18 @@ import com.redbubble.hawk.{ExtendedData, HeaderValidationMethod, PayloadValidati
 object NormalisedRequest {
   def normalisedHeaderMac(credentials: Credentials, time: Time, nonce: Nonce, context: RequestContext,
       extendedData: Option[ExtendedData], normalisedPayloadMac: Option[MAC]): MAC = {
-    val normalised =
-      s"""
-         |${HeaderValidationMethod.identifier}
-         |${time.asSeconds}
-         |${nonce.encoded}
-         |${context.method.httpRequestLineMethod}
-         |${context.path.path}
-         |${context.host.host}
-         |${context.port.port}
-         |${normalisedPayloadMac.map(h => h.encoded).getOrElse("")}
-         |${extendedData.getOrElse("")}
-      """.stripMargin.trim + "\n"
+    val headerFields: Seq[String] = Seq(
+      HeaderValidationMethod.identifier,
+      time.asSeconds.toString,
+      nonce.encoded,
+      context.method.httpRequestLineMethod,
+      context.path.path,
+      context.host.host,
+      context.port.port.toString,
+      normalisedPayloadMac.map(h => h.encoded).getOrElse(""),
+      extendedData.getOrElse("")
+    )
+    val normalised = headerFields.map(_.trim).mkString("", "\n", "\n")
     MacOps.mac(credentials, normalised.getBytes(UTF_8))
   }
 
@@ -29,12 +29,12 @@ object NormalisedRequest {
       context.clientAuthHeader.nonce, context.context, context.clientAuthHeader.extendedData, normalisedPayloadMac)
 
   def normalisedPayloadMac(credentials: Credentials, payload: PayloadContext): MAC = {
-    val normalised =
-      s"""
-         |${PayloadValidationMethod.identifier}
-         |${payload.contentType.contentType.toLowerCase}
-         |${new String(payload.data, UTF_8)}
-      """.stripMargin.trim + "\n"
+    val headerFields: Seq[String] = Seq(
+      PayloadValidationMethod.identifier,
+      payload.contentType.contentType.toLowerCase,
+      new String(payload.data, UTF_8)
+    )
+    val normalised = headerFields.map(_.trim).mkString("", "\n", "\n")
     MacOps.mac(credentials, normalised.getBytes(UTF_8))
   }
 }

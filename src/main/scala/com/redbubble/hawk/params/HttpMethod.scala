@@ -1,5 +1,7 @@
 package com.redbubble.hawk.params
 
+import scala.collection.immutable.Seq
+
 object HttpMethod {
   def httpMethod(method: String): Option[HttpMethod] = method.toUpperCase match {
     case Options.httpRequestLineMethod => Some(Options)
@@ -13,6 +15,11 @@ object HttpMethod {
     case Patch.httpRequestLineMethod => Some(Patch)
     case _ => None
   }
+
+  /**
+    * These HTTP methods support `hawk.1.payload` validation.
+    */
+  def payloadValidationMethods: Seq[HttpMethod] = List(Put, Post, Patch)
 }
 
 sealed trait HttpMethod {
