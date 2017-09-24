@@ -50,12 +50,6 @@ final class MaccerSpec extends Specification with SpecHelper with Generators {
       val mac = Maccer.validateAndComputeRequestMac(credentials, noPayloadRequestContext)
       mac must beRight(MacOps.mac(credentials, normalisedRequest.getBytes(UTF_8)))
     }
-
-    "returns an error if we try to validate the payload" >> {
-      val credentials = Credentials(keyId, key, Sha256)
-      val mac = Maccer.validateAndComputeRequestMac(credentials, noPayloadRequestContext)
-      mac must beLeft
-    }
   }
 
   "Payload validation" >> {

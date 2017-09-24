@@ -15,10 +15,7 @@ object TimeValid {
 object HawkTimeValidator {
   final val DefaultLeeway: Duration = Duration.standardMinutes(2)
 
-  def validate(credentials: Credentials,
-      context: ValidatableRequestContext,
-      leeway: Duration
-  ): Either[HawkError, TimeValid] = {
+  def validate(credentials: Credentials, context: ValidatableRequestContext, leeway: Duration): Either[HawkError, TimeValid] = {
     val delta = nowUtc.minus(context.clientAuthHeader.timestamp).getStandardSeconds
     (delta <= leeway.getStandardSeconds).either(error("Timestamp invalid"), TimeValid.valid)
   }

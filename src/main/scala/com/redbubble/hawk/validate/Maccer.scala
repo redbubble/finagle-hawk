@@ -17,14 +17,11 @@ object Maccer {
   }
 
   /**
-    * Validates an incoming request (i.e. has a Hawk authorisation header).
+    * Validates an incoming request (i.e. has a Hawk authorisation header). If a payload is present, e.g. in a POST
+    * request, `hawk.1.payload` validation  will be used, otherwise, `hawk.1.header` validation will be used.
     */
-  def validateAndComputeRequestMac(
-      credentials: Credentials, context: ValidatableRequestContext): Either[HawkError, MAC] =
-    context.context.payload match {
-      case Some(_) => validatePayload(credentials, context)
-      case None => validateHeader(credentials, context)
-    }
+  def validateAndComputeRequestMac(credentials: Credentials, context: ValidatableRequestContext): Either[HawkError, MAC] =
+    context.context.payload.fold(validateHeader(credentials, context))(_ => validatePayload(credentials, context))
 
   private def validateHeader(credentials: Credentials, context: ValidatableRequestContext): Either[HawkError, MAC] =
     Right(normalisedHeaderMac(credentials, context, None))
