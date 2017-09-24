@@ -5,6 +5,7 @@ import java.net.URI
 import com.redbubble.hawk.HawkAuthenticate.parseRawRequestAuthHeader
 import com.redbubble.hawk.params._
 import com.redbubble.hawk.validate.RequestAuthorisationHeader
+import com.redbubble.util.io.BufOps
 import com.twitter.finagle.http.Request
 import com.twitter.io.Buf
 import com.twitter.util.Try
@@ -32,12 +33,6 @@ object RequestContextBuilder {
 
   private def payloadContext(contentType: Option[String], content: Buf): PayloadContext = {
     val ct = contentType.map(ContentType(_)).getOrElse(ContentType.UnknownContentType)
-    PayloadContext(ct, bufToBytes(content))
-  }
-
-  private def bufToBytes(b: Buf): Array[Byte] = {
-    val output = new Array[Byte](b.length)
-    b.write(output, 0)
-    output
+    PayloadContext(ct, BufOps.bufToByteArray(content))
   }
 }
