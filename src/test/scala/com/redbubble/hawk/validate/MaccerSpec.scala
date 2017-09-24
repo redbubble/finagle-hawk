@@ -41,19 +41,19 @@ final class MaccerSpec extends Specification with SpecHelper with Generators {
 
     "can be hashed as SHA-256" >> {
       val credentials = Credentials(keyId, key, Sha256)
-      val mac = Maccer.validateRequestMac(credentials, noPayloadRequestContext, HeaderValidationMethod)
+      val mac = Maccer.validateAndComputeRequestMac(credentials, noPayloadRequestContext, HeaderValidationMethod)
       mac must beRight(MacOps.mac(credentials, normalisedRequest.getBytes(UTF_8)))
     }
 
     "can be hashed as SHA-512" >> {
       val credentials = Credentials(keyId, key, Sha512)
-      val mac = Maccer.validateRequestMac(credentials, noPayloadRequestContext, HeaderValidationMethod)
+      val mac = Maccer.validateAndComputeRequestMac(credentials, noPayloadRequestContext, HeaderValidationMethod)
       mac must beRight(MacOps.mac(credentials, normalisedRequest.getBytes(UTF_8)))
     }
 
     "returns an error if we try to validate the payload" >> {
       val credentials = Credentials(keyId, key, Sha256)
-      val mac = Maccer.validateRequestMac(credentials, noPayloadRequestContext, PayloadValidationMethod)
+      val mac = Maccer.validateAndComputeRequestMac(credentials, noPayloadRequestContext, PayloadValidationMethod)
       mac must beLeft
     }
   }
@@ -67,7 +67,7 @@ final class MaccerSpec extends Specification with SpecHelper with Generators {
         Some(extendedData), MAC(Base64Encoded("SYfiySDsJeAxYe8434iohquXpd5SgNWl0QDXAE1ZpW0=")))
       val requestContext = ValidatableRequestContext(RequestContext(Post, host, port, path, Some(payload)), authHeader)
       val credentials = Credentials(keyId, key, Sha256)
-      val mac = Maccer.validateRequestMac(credentials, requestContext, PayloadValidationMethod)
+      val mac = Maccer.validateAndComputeRequestMac(credentials, requestContext, PayloadValidationMethod)
       mac must beRight(normalisedRequestMac(credentials, requestContext, payload))
     }
 
@@ -77,7 +77,7 @@ final class MaccerSpec extends Specification with SpecHelper with Generators {
         Some(extendedData), MAC(Base64Encoded("6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=")))
       val requestContext = ValidatableRequestContext(RequestContext(Post, host, port, path, Some(payload)), authHeader)
       val credentials = Credentials(keyId, key, Sha256)
-      val mac = Maccer.validateRequestMac(credentials, requestContext, PayloadValidationMethod)
+      val mac = Maccer.validateAndComputeRequestMac(credentials, requestContext, PayloadValidationMethod)
       mac must beLeft
     }
   }

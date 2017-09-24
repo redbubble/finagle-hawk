@@ -19,7 +19,7 @@ object Maccer {
   /**
     * Validates an incoming request (i.e. has a Hawk authorisation header) according to the given validation `method`.
     */
-  def validateRequestMac(
+  def validateAndComputeRequestMac(
       credentials: Credentials, context: ValidatableRequestContext, method: ValidationMethod): Either[HawkError, MAC] =
     method match {
       case HeaderValidationMethod => validateHeader(credentials, context)
