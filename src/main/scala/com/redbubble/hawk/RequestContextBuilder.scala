@@ -3,6 +3,7 @@ package com.redbubble.hawk
 import java.net.URI
 
 import com.redbubble.hawk.HawkAuthenticate.parseRawRequestAuthHeader
+import com.redbubble.hawk.params.HttpMethod.payloadValidationMethods
 import com.redbubble.hawk.params._
 import com.redbubble.hawk.validate.RequestAuthorisationHeader
 import com.redbubble.util.io.BufOps
@@ -29,7 +30,7 @@ object RequestContextBuilder {
     request.headerMap.get(AuthorisationHttpHeader).flatMap(s => parseRawRequestAuthHeader(RawAuthenticationHeader(s)))
 
   private def methodDependantPayloadContext(method: HttpMethod, contentType: Option[String], content: Buf): Option[PayloadContext] =
-    List(Put, Post, Patch).contains(method).option(payloadContext(contentType, content))
+    payloadValidationMethods.contains(method).option(payloadContext(contentType, content))
 
   private def payloadContext(contentType: Option[String], content: Buf): PayloadContext = {
     val ct = contentType.map(ContentType(_)).getOrElse(ContentType.UnknownContentType)

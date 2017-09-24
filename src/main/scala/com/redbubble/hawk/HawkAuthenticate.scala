@@ -38,15 +38,10 @@ object HawkAuthenticate {
   /**
     * Authenticate an incoming request using Hawk.
     */
-  def authenticateRequest(
-      credentials: Credentials,
-      context: ValidatableRequestContext,
-      method: ValidationMethod,
-      leeway: Duration
-  ): Either[HawkError, RequestValid] =
+  def authenticateRequest(credentials: Credentials, context: ValidatableRequestContext, leeway: Duration): Either[HawkError, RequestValid] =
     for {
-      _ <- validateTime(credentials, context, method, leeway)
-      _ <- validateMac(credentials, context, method)
+      _ <- validateTime(credentials, context, leeway)
+      _ <- validateMac(credentials, context)
     } yield RequestValid.valid
 
   /**

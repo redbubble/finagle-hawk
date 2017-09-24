@@ -1,11 +1,11 @@
 package com.redbubble.hawk.validate
 
+import com.redbubble.hawk._
 import com.redbubble.hawk.params._
 import com.redbubble.hawk.spec.{Generators, SpecHelper}
 import com.redbubble.hawk.util.Time
 import com.redbubble.hawk.util.Time._
 import com.redbubble.hawk.validate.HawkTimeValidator.{DefaultLeeway, validate}
-import com.redbubble.hawk.{HeaderValidationMethod, _}
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Properties
 import org.specs2.mutable.Specification
@@ -17,9 +17,9 @@ final class HawkTimeValidatorSpec extends Specification with SpecHelper with Gen
     property("are valid if within the interval") = forAll { (time: Time) =>
       val delta = nowUtc.minus(time).getStandardSeconds
       if (delta > DefaultLeeway.getStandardSeconds) {
-        validate(credentials, context(time), HeaderValidationMethod, DefaultLeeway) must beLeft
+        validate(credentials, context(time), DefaultLeeway) must beLeft
       } else {
-        validate(credentials, context(time), HeaderValidationMethod, DefaultLeeway) must beRight
+        validate(credentials, context(time), DefaultLeeway) must beRight
       }
     }
   }

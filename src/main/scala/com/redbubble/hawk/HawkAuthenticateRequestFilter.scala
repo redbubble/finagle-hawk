@@ -48,7 +48,7 @@ abstract class HawkAuthenticateRequestFilter(
 
   private def authenticate(request: Request): Either[HawkError, RequestValid] = {
     val authenticationResult = buildContext(request).map { context =>
-      authenticateRequest(credentials, context, PayloadValidationMethod, leeway)
+      authenticateRequest(credentials, context, leeway)
     }.getOrElse(errorE(s"Missing authentication header '$AuthorisationHttpHeader'"))
     authenticationResult.leftMap(e => HawkAuthenticationFailedError("Request is not authorised", Some(e)))
   }

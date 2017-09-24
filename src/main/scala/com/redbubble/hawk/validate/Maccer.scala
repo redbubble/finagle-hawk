@@ -3,7 +3,7 @@ package com.redbubble.hawk.validate
 import com.redbubble.hawk.params.{Nonce, PayloadContext, RequestContext, ValidatableRequestContext}
 import com.redbubble.hawk.util.Time
 import com.redbubble.hawk.validate.NormalisedRequest._
-import com.redbubble.hawk.{HawkError, HeaderValidationMethod, PayloadValidationMethod, ValidationMethod, _}
+import com.redbubble.hawk.{HawkError, _}
 import mouse.all._
 
 object Maccer {
@@ -17,13 +17,13 @@ object Maccer {
   }
 
   /**
-    * Validates an incoming request (i.e. has a Hawk authorisation header) according to the given validation `method`.
+    * Validates an incoming request (i.e. has a Hawk authorisation header).
     */
   def validateAndComputeRequestMac(
-      credentials: Credentials, context: ValidatableRequestContext, method: ValidationMethod): Either[HawkError, MAC] =
-    method match {
-      case HeaderValidationMethod => validateHeader(credentials, context)
-      case PayloadValidationMethod => validatePayload(credentials, context)
+      credentials: Credentials, context: ValidatableRequestContext): Either[HawkError, MAC] =
+    context.context.payload match {
+      case Some(_) => validatePayload(credentials, context)
+      case None => validateHeader(credentials, context)
     }
 
   private def validateHeader(credentials: Credentials, context: ValidatableRequestContext): Either[HawkError, MAC] =

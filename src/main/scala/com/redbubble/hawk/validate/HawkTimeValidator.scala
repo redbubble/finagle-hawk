@@ -2,7 +2,7 @@ package com.redbubble.hawk.validate
 
 import com.redbubble.hawk.params.ValidatableRequestContext
 import com.redbubble.hawk.util.Time.nowUtc
-import com.redbubble.hawk.{HawkError, ValidationMethod, _}
+import com.redbubble.hawk.{HawkError, _}
 import mouse.all._
 import org.joda.time.Duration
 
@@ -17,7 +17,6 @@ object HawkTimeValidator {
 
   def validate(credentials: Credentials,
       context: ValidatableRequestContext,
-      method: ValidationMethod,
       leeway: Duration
   ): Either[HawkError, TimeValid] = {
     val delta = nowUtc.minus(context.clientAuthHeader.timestamp).getStandardSeconds
