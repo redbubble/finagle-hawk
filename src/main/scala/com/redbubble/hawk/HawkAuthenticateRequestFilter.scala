@@ -32,10 +32,10 @@ abstract class HawkAuthenticateRequestFilter(
 
   final override def apply(request: Request, continue: Service[Request, Response]): Future[Response] =
     if (whitelistedPaths.exists(p => request.path.startsWith(p))) {
-      hawkLogger.trace(s"Received request on whitelisted path '${request.path}', ignoring authentication")
+      hawkLogger.trace(s"Received request on whitelisted path '${request.path}', bypassing authentication")
       continue(request)
     } else {
-      hawkLogger.trace(s"Received request path '${request.path}' from ${request.remoteAddress} with header '${request.headerMap.get(AuthorisationHttpHeader).getOrElse("not provided")}'")
+      hawkLogger.trace(s"Received request on path '${request.path}' from ${request.remoteAddress} with header '${request.headerMap.get(AuthorisationHttpHeader).getOrElse("not provided")}'")
       authenticate(request).fold(
         e => {
           failureCounter.incr()
