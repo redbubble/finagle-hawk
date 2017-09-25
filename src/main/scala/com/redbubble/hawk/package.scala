@@ -1,5 +1,7 @@
 package com.redbubble
 
+import com.redbubble.util.async.singleThreadedFuturePool
+import com.redbubble.util.log.Logger
 import shapeless.tag
 import shapeless.tag.@@
 
@@ -32,6 +34,8 @@ package object hawk {
   val MustAuthenticateHttpHeader = "WWW-Authenticate"
   val AuthorisationHttpHeader = "Authorization"
   val HawkHeaderValuePrefix = "Hawk"
+
+  final val hawkLogger = new Logger("finagle-hawk")(singleThreadedFuturePool)
 
   def KeyId(s: String): @@[String, KeyIdTag] = tag[KeyIdTag](s)
 

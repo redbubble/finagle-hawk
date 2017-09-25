@@ -21,14 +21,14 @@ object Maccer {
     * request, `hawk.1.payload` validation  will be used, otherwise, `hawk.1.header` validation will be used.
     */
   def validateAndComputeRequestMac(credentials: Credentials, context: ValidatableRequestContext): Either[HawkError, MAC] = {
-    context.clientAuthHeader.payloadHash.fold(validateHeader(credentials, context))(_ => validatePayload(credentials, context))
-    //context.context.payload.fold(validateHeader(credentials, context))(_ => validatePayload(credentials, context))
+    context.clientAuthHeader.payloadHash.fold(computeMacUsingHeader(credentials, context))(_ => computeMacUsingPayload(credentials, context))
+    //context.context.payload.fold(computeMacUsingHeader(credentials, context))(_ => computeMacUsingPayload(credentials, context))
   }
 
-  private def validateHeader(credentials: Credentials, context: ValidatableRequestContext): Either[HawkError, MAC] =
+  private def computeMacUsingHeader(credentials: Credentials, context: ValidatableRequestContext): Either[HawkError, MAC] =
     Right(normalisedHeaderMac(credentials, context, None))
 
-  private def validatePayload(credentials: Credentials, context: ValidatableRequestContext): Either[HawkError, MAC] = {
+  private def computeMacUsingPayload(credentials: Credentials, context: ValidatableRequestContext): Either[HawkError, MAC] = {
     context.context.payload.map { payload =>
       context.clientAuthHeader.payloadHash.flatMap { clientProvidedHash =>
         val macFromClientProvidedHash = normalisedHeaderMac(credentials, context, Some(MAC(clientProvidedHash.encoded)))
