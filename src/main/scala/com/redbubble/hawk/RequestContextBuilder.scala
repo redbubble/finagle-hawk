@@ -13,6 +13,8 @@ import com.twitter.util.Try
 import mouse.all._
 
 object RequestContextBuilder {
+  private val portRegex = ":[0-9]+".r
+
   def buildContext(request: Request): Option[ValidatableRequestContext] =
     for {
       header <- parseAuthHeader(request)
@@ -39,7 +41,9 @@ object RequestContextBuilder {
 
   // Use the Host header if present, or default to the request URI.
   private def guessRequestHost(hostHeader: Option[String], requestUri: URI) =
-    hostHeader.orElse(Option(requestUri.getHost)).map(Host(_)).getOrElse(Host.UnknownHost)
+    hostHeader.orElse(Option(requestUri.getHost)).map { h =>
+      Host(portRegex.replaceAllIn(h, ""))
+    }.getOrElse(Host.UnknownHost)
 
   // Do our best to figure out the port.
   private def guessRequestPort(requestUri: URI) = {
