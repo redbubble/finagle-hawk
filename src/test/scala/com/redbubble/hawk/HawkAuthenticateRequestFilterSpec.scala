@@ -53,11 +53,16 @@ final class HawkAuthenticateRequestFilterSpec extends Specification with SpecHel
     }
   }
 
-  private def baseRequest(uri: URI): Request = Request(Method.Get, uri.toString)
+  // Note. We explicitly set the host header as most clients will send this.
+  private def baseRequest(uri: URI): Request = {
+    val r = Request(Method.Get, uri.toString)
+    r.host = s"${uri.getHost}:443"
+    r
+  }
 
   private def requestWithAuthHeader(uri: URI, hawkHeader: String) = {
     val request = baseRequest(uri)
-    request.headerMap.add(AuthorisationHttpHeader, hawkHeader)
+    request.headerMap.set(AuthorisationHttpHeader, hawkHeader)
     request
   }
 }
