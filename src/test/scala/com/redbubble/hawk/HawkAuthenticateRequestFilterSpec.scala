@@ -6,25 +6,11 @@ import com.redbubble.hawk.HawkAuthenticate.hawkHeader
 import com.redbubble.hawk.params._
 import com.redbubble.hawk.spec.SpecHelper
 import com.redbubble.hawk.util.Time
-import com.redbubble.hawk.validate.{Credentials, Sha256}
-import com.redbubble.util.http.ResponseOps.textResponse
-import com.redbubble.util.metrics.StatsReceiver
-import com.twitter.finagle.Service
 import com.twitter.finagle.http.Status.{Ok, Unauthorized}
-import com.twitter.finagle.http.{Method, Request, Response}
-import com.twitter.io.Buf
-import com.twitter.util.{Await, Future}
+import com.twitter.util.Await
 import org.specs2.mutable.Specification
 
-final class HawkAuthenticateRequestFilterSpec extends Specification with SpecHelper {
-  private val credentials = Credentials(KeyId("key-id"), Key("secret"), Sha256)
-
-  private object HawkAuthFilter extends HawkAuthenticateRequestFilter(credentials, Seq.empty)(StatsReceiver.stats)
-
-  private object TestService extends Service[Request, Response] {
-    override def apply(request: Request) = Future.value(textResponse(Ok, Buf.Utf8("OK")))
-  }
-
+final class HawkAuthenticateRequestFilterSpec extends Specification with SpecHelper with RequestSpecOps {
   "HawkAuthenticateRequestFilter" >> {
     val hawkAuthenticatedService = HawkAuthFilter andThen TestService
 
@@ -51,18 +37,5 @@ final class HawkAuthenticateRequestFilterSpec extends Specification with SpecHel
         result.status should be(Ok)
       }
     }
-  }
-
-  // Note. We explicitly set the host header as most clients will send this.
-  private def baseRequest(uri: URI): Request = {
-    val r = Request(Method.Get, uri.toString)
-    r.host = s"${uri.getHost}:443"
-    r
-  }
-
-  private def requestWithAuthHeader(uri: URI, hawkHeader: String) = {
-    val request = baseRequest(uri)
-    request.headerMap.set(AuthorisationHttpHeader, hawkHeader)
-    request
   }
 }

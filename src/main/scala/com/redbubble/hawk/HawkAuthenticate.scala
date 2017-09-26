@@ -42,7 +42,10 @@ object HawkAuthenticate {
     for {
       _ <- validateTime(credentials, context, leeway)
       _ <- validateMac(credentials, context)
-    } yield RequestValid.valid
+    } yield {
+      hawkLogger.trace(s"Request is valid")
+      RequestValid.valid
+    }
 
   /**
     * Authenticate an outging response into a form suitable for adding to a `Server-Authorization` header.

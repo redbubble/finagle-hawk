@@ -36,6 +36,8 @@ object AuthenticationFilter extends HawkAuthenticateRequestFilter(creds)
 val authenticatedService = AuthenticationFilter andThen service
 ```
 
+There is a `TRACE` level logger that you can switch on to get more information about what is going on with requests.
+
 # Release
 
 For contributors, a cheat sheet to making a new release:
