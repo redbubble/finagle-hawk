@@ -43,7 +43,8 @@ resolvers ++= Seq(
   Resolver.jcenterRepo,
   Resolver.sonatypeRepo("releases"),
   Resolver.sonatypeRepo("snapshots"),
-  "Twitter" at "http://maven.twttr.com"
+  "Twitter" at "http://maven.twttr.com",
+  Resolver.bintrayRepo("redbubble", "open-source")
 )
 
 lazy val rbUtilsVersion = "0.2.10"
