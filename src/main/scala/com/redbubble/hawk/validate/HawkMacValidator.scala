@@ -20,5 +20,5 @@ object HawkMacValidator {
   }
 
   private def validateMac(computedMac: MAC, providedMac: MAC): Either[HawkError, MacValid] =
-    (computedMac == providedMac).either(error("Request MAC does not match computed MAC"), MacValid.valid)
+    MAC.isEqual(computedMac, providedMac).either(error("Request MAC does not match computed MAC"), MacValid.valid)
 }
