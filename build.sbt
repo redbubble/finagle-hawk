@@ -46,20 +46,20 @@ resolvers ++= Seq(
   "Twitter" at "http://maven.twttr.com"
 )
 
-lazy val rbUtilsVersion = "0.2.4"
-lazy val catsVersion = "0.9.0"
-lazy val mouseVersion = "0.9"
-lazy val shapelessVersion = "2.3.2"
-lazy val circeVersion = "0.8.0"
-lazy val finagleVersion = "6.45.0"
+lazy val rbUtilsVersion = "0.2.10"
+lazy val catsVersion = "1.0.1"
+lazy val mouseVersion = "0.16"
+lazy val shapelessVersion = "2.3.3"
+lazy val circeVersion = "0.9.0"
+lazy val finagleVersion = "17.12.0"
 lazy val jodaTimeVersion = "2.9.9"
-lazy val jodaConvertVersion = "1.9"
-lazy val specsVersion = "3.9.5"
+lazy val jodaConvertVersion = "1.9.2"
+lazy val specsVersion = "4.0.2"
 
 libraryDependencies ++= Seq(
   "com.redbubble" %% "rb-scala-utils" % rbUtilsVersion,
   "org.typelevel" %% "cats-core" % catsVersion,
-  "com.github.benhutchison" %% "mouse" % mouseVersion,
+  "org.typelevel" %% "mouse" % mouseVersion,
   "com.chuusai" %% "shapeless" % shapelessVersion,
   "joda-time" % "joda-time" % jodaTimeVersion,
   "org.joda" % "joda-convert" % jodaConvertVersion,
